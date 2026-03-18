@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 export default function Hero() {
   return (
     <section className="relative h-screen flex items-end pb-16 px-8 overflow-hidden">
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600')] bg-cover bg-center" />
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600')] bg-cover bg-center " />
       <div className="absolute inset-0 bg-black/55" />
 
       <div className="relative z-10">

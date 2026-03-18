@@ -4,8 +4,8 @@ import { motion } from 'framer-motion'
 
 // Les champs du formulaire définis en dehors du composant
 const champs = [
-  { name: 'nom',        label: 'Nom complet',      type: 'text',  placeholder: 'Lucas Dupont' },
-  { name: 'email',      label: 'Email',             type: 'email', placeholder: 'lucas@email.com' },
+  { name: 'nom',        label: 'Nom complet',      type: 'text',  placeholder: 'Nom' },
+  { name: 'email',      label: 'Email',             type: 'email', placeholder: 'Email' },
   { name: 'prestation', label: 'Type de prestation',type: 'text',  placeholder: 'Mariage, portrait...' },
   { name: 'date',       label: 'Date souhaitée',    type: 'date',  placeholder: '' },
 ]

@@ -14,7 +14,8 @@ export default function About() {
           className="overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1554151228-14d9def656e4?w=800"
-            alt="Lucas Roy photographe"
+            alt="Saamson photographe"
+            loading="lazy"
             className="w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
           />
         </motion.div>
