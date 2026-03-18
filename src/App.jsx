@@ -1,6 +1,8 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Gallery from './components/Gallery'
+import About from './components/About'
+import Pricing from './components/Pricing'
 
 
 function App() {
@@ -9,6 +11,8 @@ function App() {
       <Navbar />
       <Hero />
       <Gallery />
+      <About/>
+      <Pricing/>
     </div>
   )
 }
