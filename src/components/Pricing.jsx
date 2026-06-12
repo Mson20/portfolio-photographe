@@ -1,94 +1,111 @@
 import { motion } from 'framer-motion'
+import './Pricing.css'
 
-const forfaits = [
+const tarifsPhoto = [
   {
     nom: 'Essentiel',
     prix: 299,
     desc: 'Idéal pour un portrait ou un shooting solo',
-    inclus: ['2h de shooting', '20 photos retouchées', 'Galerie privée en ligne', 'Utilisation personnelle'],
-    highlight: false,
+    features: ['2h de shooting', '20 photos retouchées', 'Galerie privée en ligne', 'Utilisation personnelle'],
+    popular: false,
   },
   {
     nom: 'Pro',
     prix: 599,
     desc: 'Parfait pour les mariages et événements',
-    inclus: ['6h de shooting', '80 photos retouchées', 'Galerie privée en ligne', 'Utilisation commerciale', 'Album photo offert'],
-    highlight: true,
+    features: ['6h de shooting', '80 photos retouchées', 'Galerie privée en ligne', 'Utilisation commerciale', 'Album photo offert'],
+    popular: true,
   },
   {
     nom: 'Premium',
     prix: 999,
     desc: 'La formule complète sans compromis',
-    inclus: ['Journée entière', '150 photos retouchées', 'Galerie privée en ligne', 'Utilisation commerciale', 'Album photo offert', 'Vidéo souvenir courte'],
-    highlight: false,
+    features: ['Journée entière', '150 photos retouchées', 'Galerie privée en ligne', 'Utilisation commerciale', 'Album photo offert', 'Vidéo souvenir courte'],
+    popular: false,
   },
 ]
 
+const tarifsPeinture = [
+  {
+    nom: 'Petit format',
+    prix: 80,
+    taille: '20×20 cm',
+    desc: 'Parfait pour décorer un espace intimiste',
+    features: ['Peinture acrylique sur toile', 'Signée par l\'artiste', 'Livrée avec certificat', 'Emballage soigné'],
+    popular: false,
+  },
+  {
+    nom: 'Moyen format',
+    prix: 150,
+    taille: '40×50 cm',
+    desc: 'La pièce maîtresse de votre intérieur',
+    features: ['Peinture acrylique sur toile', 'Signée par l\'artiste', 'Livrée avec certificat', 'Emballage soigné', 'Châssis en bois inclus'],
+    popular: true,
+  },
+  {
+    nom: 'Grand format',
+    prix: 280,
+    taille: '60×80 cm',
+    desc: 'Une œuvre d\'exception pour les grands espaces',
+    features: ['Peinture acrylique sur toile', 'Signée par l\'artiste', 'Livrée avec certificat', 'Emballage soigné', 'Châssis en bois inclus', 'Livraison offerte'],
+    popular: false,
+  },
+]
+
+function CardsSection({ tarifs }) {
+  return (
+    <div className="pricing-grid">
+      {tarifs.map((t, i) => (
+        <motion.div key={t.nom}
+          className={`pricing-card ${t.popular ? 'popular' : ''}`}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: i * 0.1 }}>
+          {t.popular && <div className="popular-badge">Populaire</div>}
+          <div className="pricing-top">
+            <span className="pricing-nom">{t.nom}</span>
+            {t.taille && <span className="pricing-taille">{t.taille}</span>}
+            <div className="pricing-prix">
+              {t.prix}<span>€</span>
+            </div>
+            <p className="pricing-desc">{t.desc}</p>
+          </div>
+          <ul className="pricing-features">
+            {t.features.map(f => (
+              <li key={f}>
+                <span className="check">✓</span> {f}
+              </li>
+            ))}
+          </ul>
+          <a href="#contact" className="pricing-btn">
+            {t.taille ? 'Commander' : 'Choisir ce forfait'}
+          </a>
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
 export default function Pricing() {
   return (
-    <section id="tarifs" className="py-24 px-8 bg-black">
-      <motion.h2
+    <section id="pricing" className="pricing-section">
+      <motion.div className="pricing-header"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-3xl font-medium text-white text-center mb-4">
-        Tarifs
-      </motion.h2>
-      <motion.p
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
-        className="text-gray-500 text-center mb-16 text-sm">
-        Des forfaits clairs, sans mauvaise surprise
-      </motion.p>
+        transition={{ duration: 0.6 }}>
+        <h2>Tarifs</h2>
+        <p>Des prix clairs, sans mauvaise surprise</p>
+      </motion.div>
 
-      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-        {forfaits.map((forfait, i) => (
-          <motion.div
-            key={forfait.nom}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className={`flex flex-col p-8 border transition-all duration-300
-              ${forfait.highlight
-                ? 'border-white bg-white/5'
-                : 'border-white/10 hover:border-white/30'
-              }`}>
+      <div className="pricing-block">
+        <h3 className="pricing-block-title">📷 Photographie</h3>
+        <CardsSection tarifs={tarifsPhoto} />
+      </div>
 
-            {forfait.highlight && (
-              <span className="text-xs tracking-widest uppercase text-black bg-white px-3 py-1 self-start mb-6">
-                Populaire
-              </span>
-            )}
-
-            <p className="text-xs tracking-widest uppercase text-gray-500 mb-2">{forfait.nom}</p>
-            <div className="flex items-baseline gap-1 mb-3">
-              <span className="text-4xl font-medium text-white">{forfait.prix}</span>
-              <span className="text-gray-500 text-sm">€</span>
-            </div>
-            <p className="text-gray-500 text-sm mb-8">{forfait.desc}</p>
-
-            <ul className="flex flex-col gap-3 mb-10 flex-1">
-              {forfait.inclus.map(item => (
-                <li key={item} className="flex items-center gap-3 text-sm text-gray-300">
-                  <span className="w-1 h-1 rounded-full bg-white/50 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-
-            <a href="#contact"
-              className={`text-center text-xs tracking-widest uppercase py-3 border transition-all duration-300
-                ${forfait.highlight
-                  ? 'border-white text-black bg-white hover:bg-transparent hover:text-white'
-                  : 'border-white/30 text-white hover:border-white'
-                }`}>
-              Choisir ce forfait
-            </a>
-          </motion.div>
-        ))}
+      <div className="pricing-block">
+        <h3 className="pricing-block-title">🎨 Peintures sur toile</h3>
+        <p className="pricing-block-sub">Sur commande à partir de 200€ — <a href="#contact">me contacter</a></p>
+        <CardsSection tarifs={tarifsPeinture} />
       </div>
     </section>
   )

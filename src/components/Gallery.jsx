@@ -2,91 +2,135 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
-import { photos } from '../data/photo'
+import { photos, peintures } from '../data/photos'
+import './Gallery.css'
 
-const categories = ['Tout', 'portrait', 'mariage', 'corporate']
+const photoCategories = ['Tous', 'Église', 'Nature', 'Animaux', 'Spirituel']
 
 export default function Gallery() {
-  const [catActive, setCatActive] = useState('Tout')
-  const [lightboxOpen, setLightboxOpen] = useState(false)
-  const [photoIndex, setPhotoIndex] = useState(0)
+  const [activeTab, setActiveTab] = useState('photos')
+  const [filtre, setFiltre] = useState('Tous')
+  const [lightboxIndex, setLightboxIndex] = useState(-1)
 
-  // Filtre les photos selon la catégorie active
-  const photosFiltrees = catActive === 'Tout'
+  const filteredPhotos = filtre === 'Tous'
     ? photos
-    : photos.filter(p => p.cat === catActive)
+    : photos.filter(p => p.category === filtre)
 
-    // Format attendu par la Lightbox
-  const slides = photos.map(p => ({ src: p.src, alt: p.alt }))
-
-  const ouvrirLightbox = (photo) => {
-    // Trouve l'index dans le tableau ORIGINAL (pas filtré)
-    // pour que la navigation lightbox soit correcte
-    const index = photos.findIndex(p => p.id === photo.id)
-    setPhotoIndex(index)
-    setLightboxOpen(true)
-  }
+  const photoSlides = filteredPhotos.map(p => ({ src: p.src }))
+  const peintureSlides = peintures.map(p => ({ src: p.src }))
 
   return (
-    <section id="galerie" className="py-24 px-8 bg-black">
+    <section id="portfolio" className="gallery-section">
 
-      {/* Titre de section */}
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
+      {/* Titre */}
+      <motion.div className="gallery-header"
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-3xl font-medium text-white mb-12 text-center">
-        Galerie
-      </motion.h2>
+        transition={{ duration: 0.6 }}>
+        <span className="section-label">Portfolio</span>
+        <h2>Mes créations</h2>
+      </motion.div>
 
-      {/* Boutons filtres */}
-      <div className="flex justify-center gap-4 mb-12">
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setCatActive(cat)}
-            className={`text-xs tracking-widest uppercase px-6 py-2 border transition-all duration-300
-              ${catActive === cat
-                ? 'border-white text-black bg-white'
-                : 'border-white/30 text-gray-400 hover:border-white hover:text-white'
-              }`}>
-            {cat}
-          </button>
-        ))}
+      {/* Onglets principaux */}
+      <div className="main-tabs">
+        <button
+          className={`main-tab ${activeTab === 'photos' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('photos'); setLightboxIndex(-1) }}>
+          📷 Photographie
+        </button>
+        <button
+          className={`main-tab ${activeTab === 'peintures' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('peintures'); setLightboxIndex(-1) }}>
+          🎨 Peintures
+        </button>
       </div>
 
-      {/* Grille masonry */}
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-3">
-        <AnimatePresence>
-          {photosFiltrees.map(photo => (
-            <motion.div
-              key={photo.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.3 }}
-              className="mb-3 cursor-pointer overflow-hidden group"
-              onClick={() => ouvrirLightbox(photo)}>
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                loading="lazy"
-                className="w-full block transition-transform duration-500 group-hover:scale-105"
-              />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      <AnimatePresence mode="wait">
 
-      {/* Lightbox */}
-      <Lightbox
-        open={lightboxOpen}
-        close={() => setLightboxOpen(false)}
-        slides={slides}
-        index={photoIndex}
-      />
+        {/* ── PHOTOS ── */}
+        {activeTab === 'photos' && (
+          <motion.div key="photos"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}>
 
+            {/* Filtres */}
+            <div className="filter-tabs">
+              {photoCategories.map(cat => (
+                <button key={cat}
+                  className={`filter-tab ${filtre === cat ? 'active' : ''}`}
+                  onClick={() => setFiltre(cat)}>
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Masonry pleine largeur */}
+            <div className="masonry">
+              <AnimatePresence>
+                {filteredPhotos.map((photo, i) => (
+                  <motion.div key={photo.id}
+                    className="masonry-item"
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3, delay: i * 0.04 }}
+                    onClick={() => setLightboxIndex(i)}>
+                    <img src={photo.src} alt={photo.title} loading="lazy" />
+                    <div className="masonry-overlay">
+                      <span className="masonry-cat">{photo.category}</span>
+                      <span className="masonry-title">{photo.title}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            <Lightbox
+              open={lightboxIndex >= 0}
+              close={() => setLightboxIndex(-1)}
+              index={lightboxIndex}
+              slides={photoSlides}
+            />
+          </motion.div>
+        )}
+
+        {/* ── PEINTURES ── */}
+        {activeTab === 'peintures' && (
+          <motion.div key="peintures"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}>
+
+            <p className="peintures-intro">
+              Peintures acryliques sur toile : animaux, spiritualité, paysages.
+            </p>
+
+            <div className="masonry">
+              {peintures.map((p, i) => (
+                <motion.div key={p.id}
+                  className="masonry-item"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: i * 0.06 }}
+                  onClick={() => setLightboxIndex(i)}>
+                  <img src={p.src} alt={p.title} loading="lazy" />
+                  <div className="masonry-overlay">
+                    <span className="masonry-cat">{p.technique}</span>
+                    <span className="masonry-title">{p.title}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <Lightbox
+              open={lightboxIndex >= 0}
+              close={() => setLightboxIndex(-1)}
+              index={lightboxIndex}
+              slides={peintureSlides}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react'
 
-const liens = ['Galerie', 'À propos', 'Tarifs', 'Contact']
+const liens = [
+  { label: 'Galerie', id: 'portfolio' },
+  { label: 'À propos', id: 'about' },
+  { label: 'Tarifs', id: 'pricing' },
+  { label: 'Contact', id: 'contact' },
+]
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -22,11 +27,11 @@ export default function Navbar() {
         {/* Liens desktop */}
         <div className="hidden md:flex gap-8">
           {liens.map(item => (
-            <a key={item} href={`#${item.toLowerCase()}`}
-              className="text-xs tracking-wider text-gray-400 hover:text-white transition-colors">
-              {item}
-            </a>
-          ))}
+  <a key={item.label} href={`#${item.id}`}
+    className="text-xs tracking-wider text-gray-400 hover:text-white transition-colors">
+    {item.label}
+  </a>
+))}
         </div>
 
         {/* Bouton burger mobile */}
@@ -43,12 +48,12 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden flex flex-col gap-6 py-8">
           {liens.map(item => (
-            <a key={item} href={`#${item.toLowerCase()}`}
-              onClick={() => setMenuOpen(false)}
-              className="text-sm tracking-wider text-gray-400 hover:text-white transition-colors">
-              {item}
-            </a>
-          ))}
+  <a key={item.label} href={`#${item.id}`}
+    onClick={() => setMenuOpen(false)}
+    className="text-sm tracking-wider text-gray-400 hover:text-white transition-colors">
+    {item.label}
+  </a>
+))}
         </div>
       )}
 
